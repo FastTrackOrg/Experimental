@@ -26,6 +26,8 @@ from shapely.geometry import LinearRing
 from shapely.geometry import LineString
 import matplotlib.pyplot as plt
 import cv2
+import argparse
+
 
 def geometricProbability(points, resolution):
     '''
@@ -121,3 +123,18 @@ def run(path, tau, cells, plot=False):
 
     print(probabilityOfIncursion[0])
     return probabilityOfIncursion[0]
+
+
+parser = argparse.ArgumentParser(description="Compute the probability of incursion given a Tracking_Result folder.")
+parser.add_argument("path", nargs='+', help="Path to a Tracking_Result folder.")
+parser.add_argument("--tau", nargs='?', default=1, type=int, dest="tau", help="Timescale.")
+parser.add_argument("--cell", nargs='?', default=500, type=int, dest="cell", help="Number of cells to compute the geometric probability of incusion.")
+parser.add_argument("--plot", action="store_true", dest="plot", help="Plot the geometric probability and the timescale analysis.")
+
+args = parser.parse_args()
+for i in args.path:
+  if i:
+    try:
+      run(i, args.tau, args.cell, args.plot)
+    except Exception as e:
+      print(i + " has failed because " + str(e))
